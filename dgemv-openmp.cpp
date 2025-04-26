@@ -14,7 +14,7 @@ const char* dgemv_desc = "OpenMP dgemv.";
 
 void my_dgemv(int n, double* A, double* x, double* y) {
 
-   #pragma omp parallel
+ /*  #pragma omp parallel
    {
       int nthreads = omp_get_num_threads();
       int thread_id = omp_get_thread_num();
@@ -28,3 +28,16 @@ void my_dgemv(int n, double* A, double* x, double* y) {
 
 }
 
+*/
+
+
+   #pragma omp parallel for
+   for (int row = 0; row < n; row++) {
+      double temp = 0.0;
+      for (int col = 0; col < n; col++) {
+         int index = col + row * n;  // Row-major layout
+         temp += A[index] * x[col];
+      }
+      y[row] += temp;
+   }
+}
